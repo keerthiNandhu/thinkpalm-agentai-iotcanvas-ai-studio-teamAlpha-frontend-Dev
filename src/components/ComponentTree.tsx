@@ -52,7 +52,7 @@ export default function ComponentTree({
                           }`}
                         >
                           {wLast ? "└─" : "├─"}{" "}
-                          <span className={`font-medium ${isSelected ? "text-cyan-300" : "text-cyan-400"}`}>
+                          <span className={`${isSelected ? "font-semibold text-cyan-300" : "font-medium text-cyan-400"}`}>
                             {widget}
                           </span>
                         </li>

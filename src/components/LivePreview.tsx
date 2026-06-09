@@ -49,7 +49,7 @@ export default function LivePreview({ widgets, selectedWidget }: LivePreviewProp
                 ref={(el) => { refs.current[name] = el; }}
                 className={`rounded-xl transition-all duration-300 ${
                   isSelected
-                    ? "ring-2 ring-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.3)] scale-[1.01]"
+                    ? "ring-2 ring-cyan-400 shadow-lg shadow-cyan-500/30 scale-[1.02]"
                     : ""
                 }`}
               >
