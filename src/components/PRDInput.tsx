@@ -16,17 +16,22 @@ export default function PRDInput({ onAnalyze }: PRDInputProps) {
   };
 
   return (
-    <div style={styles.card}>
-      <h2 style={styles.heading}>Product Requirements</h2>
+    <div className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6 h-full">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">Product Requirements</h2>
+        <span className="text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded-md">PRD</span>
+      </div>
+
       <textarea
-        style={styles.textarea}
-        placeholder="Describe your IoT dashboard requirements here…"
+        className="flex-1 min-h-[200px] resize-none rounded-lg bg-slate-950 border border-slate-700 text-white text-sm placeholder:text-slate-600 p-3 leading-relaxed outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/30 transition"
+        placeholder="Describe your IoT dashboard requirements here…&#10;&#10;e.g. I need a dashboard to monitor temperature, battery, device status and alerts."
         value={prd}
         onChange={(e) => setPrd(e.target.value)}
         rows={10}
       />
+
       <button
-        style={styles.button}
+        className="self-start px-5 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 text-sm font-bold shadow shadow-cyan-500/30 transition"
         onClick={handleSubmit}
         disabled={!prd.trim()}
       >
@@ -35,47 +40,3 @@ export default function PRDInput({ onAnalyze }: PRDInputProps) {
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  card: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-    padding: "24px",
-    border: "1px solid #e2e8f0",
-    borderRadius: "8px",
-    background: "#ffffff",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-    height: "100%",
-  },
-  heading: {
-    margin: 0,
-    fontSize: "18px",
-    fontWeight: 600,
-    color: "#1a202c",
-  },
-  textarea: {
-    resize: "vertical",
-    padding: "10px 12px",
-    fontSize: "14px",
-    border: "1px solid #cbd5e0",
-    borderRadius: "6px",
-    fontFamily: "inherit",
-    lineHeight: 1.6,
-    color: "#2d3748",
-    outline: "none",
-  },
-  button: {
-    padding: "10px 18px",
-    fontSize: "14px",
-    fontWeight: 600,
-    background: "#4f46e5",
-    color: "#ffffff",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    alignSelf: "flex-start",
-    opacity: 1,
-    transition: "opacity 0.2s",
-  },
-};
