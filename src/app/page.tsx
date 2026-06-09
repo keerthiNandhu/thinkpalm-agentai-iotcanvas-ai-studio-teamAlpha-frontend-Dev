@@ -19,15 +19,15 @@ const requirementAgent = new RequirementAnalysisAgent();
 const planningAgent = new DashboardPlanningAgent();
 const memory = new MemoryService();
 
-/** Build a TSX code string from the plan sections */
+/** Build a TSX code string from the plan sections in requested readable TSX preview format */
 function buildGeneratedCode(plan: DashboardPlan): string {
   const sections = plan.sections
     .map((s) => {
-      const widgets = s.widgets.map((w) => `  <${w} />`).join("\n");
-      return `<section id="${s.name.toLowerCase()}">\n${widgets}\n</section>`;
+      const widgets = s.widgets.map((w) => `<${w}/>`).join("\n\n");
+      return `<section id="${s.name.toLowerCase()}">\n\n${widgets}\n\n</section>`;
     })
     .join("\n\n");
-  return sections;
+  return `<div className="${plan.tailwind}">\n\n${sections}\n\n</div>`;
 }
 
 export default function Home() {
@@ -37,6 +37,8 @@ export default function Home() {
   const [selectedWidget, setSelectedWidget] = useState<string | null>(null);
   const [generatedCode, setGeneratedCode] = useState<string>("");
   const [pipelineRan, setPipelineRan] = useState(false);
+  const [runKey, setRunKey] = useState(0);
+  const [selectedPRD, setSelectedPRD] = useState<string>("");
 
   // Load persisted history on first render (client only)
   useEffect(() => {
@@ -69,10 +71,18 @@ export default function Home() {
     memory.saveSession(prd, result);
     setHistory(memory.getHistory());
 
-    // Phase 6: generated code + timeline
+    // generated code + timeline
     setGeneratedCode(buildGeneratedCode(finalPlan));
     setPipelineRan(true);
+    setRunKey((prev) => prev + 1); // trigger animation re-run/reset in AgentTimeline
     setSelectedWidget(null);
+  };
+
+  const handleSelectSession = (prd: string) => {
+    setSelectedPRD("");
+    setTimeout(() => {
+      setSelectedPRD(prd);
+    }, 0);
   };
 
   return (
@@ -96,24 +106,32 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${pipelineRan ? "bg-emerald-400 shadow shadow-emerald-400/50" : "bg-slate-600"}`} />
-            <span className="text-xs text-slate-400">
-              {pipelineRan ? "Pipeline Complete" : "AI Pipeline Ready"}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              Multi-Agent
+            </span>
+            <span className="bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              Memory Enabled
+            </span>
+            <span className="bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              Tool Calling
             </span>
           </div>
         </header>
 
         {/* ── ROW 1: PRD | SUMMARY ── */}
         <div className="grid xl:grid-cols-2 grid-cols-1 gap-6">
-          <PRDInput onAnalyze={handleAnalyze} />
+          <PRDInput onAnalyze={handleAnalyze} value={selectedPRD} />
           <DashboardSummary analysis={analysis} />
         </div>
 
         {/* ── ROW 2: MEMORY | AGENT TIMELINE ── */}
         <div className="grid xl:grid-cols-2 grid-cols-1 gap-6">
-          <MemoryHistory sessions={history} />
-          <AgentTimeline ran={pipelineRan} />
+          <MemoryHistory sessions={history} onSelectSession={handleSelectSession} />
+          <AgentTimeline ran={pipelineRan} key={runKey} />
         </div>
 
         {/* ── ROW 3: COMPONENT TREE | LIVE PREVIEW ── */}

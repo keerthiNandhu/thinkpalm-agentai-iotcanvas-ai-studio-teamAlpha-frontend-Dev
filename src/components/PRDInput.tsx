@@ -1,13 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface PRDInputProps {
   onAnalyze: (prd: string) => void;
+  value?: string;
 }
 
-export default function PRDInput({ onAnalyze }: PRDInputProps) {
-  const [prd, setPrd] = useState("");
+export default function PRDInput({ onAnalyze, value = "" }: PRDInputProps) {
+  const [prd, setPrd] = useState(value);
+  const [showLoadedLabel, setShowLoadedLabel] = useState(false);
+
+  useEffect(() => {
+    setPrd(value);
+    if (value) {
+      setShowLoadedLabel(true);
+      const timer = setTimeout(() => setShowLoadedLabel(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [value]);
 
   const handleSubmit = () => {
     if (prd.trim()) {
@@ -16,10 +27,17 @@ export default function PRDInput({ onAnalyze }: PRDInputProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6 h-full">
+    <div id="prd-section" className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6 h-full transition-all duration-300">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-white">Product Requirements</h2>
-        <span className="text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded-md">PRD</span>
+        <div className="flex items-center gap-2">
+          {showLoadedLabel && (
+            <span className="text-xs text-cyan-400 font-semibold animate-pulse">
+              Loaded from history
+            </span>
+          )}
+          <span className="text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded-md">PRD</span>
+        </div>
       </div>
 
       <textarea

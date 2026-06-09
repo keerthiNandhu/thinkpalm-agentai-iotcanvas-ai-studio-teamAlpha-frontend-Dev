@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 interface AgentTimelineProps {
   ran: boolean;
 }
@@ -16,49 +18,87 @@ const STEPS = [
 ];
 
 export default function AgentTimeline({ ran }: AgentTimelineProps) {
+  const [activeStep, setActiveStep] = useState<number>(-1);
+  const [finished, setFinished] = useState(false);
+
+  useEffect(() => {
+    if (ran) {
+      setFinished(false);
+      setActiveStep(0);
+      let step = 0;
+      const interval = setInterval(() => {
+        step++;
+        if (step < STEPS.length) {
+          setActiveStep(step);
+        } else {
+          setActiveStep(99);
+          setFinished(true);
+          clearInterval(interval);
+        }
+      }, 150); // 150ms delay between steps -> 1.2 sec total
+      return () => clearInterval(interval);
+    } else {
+      setActiveStep(-1);
+      setFinished(false);
+    }
+  }, [ran]);
+
   return (
-    <div className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6 h-full">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white">Agent Execution Timeline</h2>
-        {ran && (
-          <span className="text-xs font-semibold bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 px-3 py-1 rounded-full">
-            ✓ Execution Completed
-          </span>
-        )}
-      </div>
-
-      <ol className="flex flex-col gap-2 mt-1">
-        {STEPS.map((step, i) => {
-          const done = ran;
-          // Simulate progressive completion: all steps done when ran=true
-          return (
-            <li key={step.key} className="flex items-center gap-3">
-              {/* Dot */}
-              <div className="relative flex-shrink-0 w-5 h-5 flex items-center justify-center">
-                {done ? (
-                  <span className="w-3 h-3 rounded-full bg-emerald-500 shadow shadow-emerald-500/40" />
-                ) : (
-                  <span className="w-3 h-3 rounded-full bg-slate-700" />
-                )}
-                {/* Connecting line */}
-                {i < STEPS.length - 1 && (
-                  <span className={`absolute top-4 left-1/2 -translate-x-1/2 w-px h-4 ${done ? "bg-emerald-800" : "bg-slate-700"}`} />
-                )}
-              </div>
-
-              {/* Label */}
-              <span className={`text-sm transition-all duration-300 ${done ? "text-white font-medium" : "text-slate-600"}`}>
-                {done ? "✓ " : ""}{step.label}
+    <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 h-full flex flex-col justify-between shadow-lg">
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-white">Agent Execution Timeline</h2>
+          {finished && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">
+                Pipeline Complete
               </span>
-            </li>
-          );
-        })}
-      </ol>
+              <span className="text-xs text-slate-400 font-mono">
+                Execution: ~1.2 sec
+              </span>
+            </div>
+          )}
+        </div>
 
+        <div className="flex flex-col gap-3">
+          {STEPS.map((step, idx) => {
+            const isCompleted = idx < activeStep;
+            const isCurrent = idx === activeStep;
+            
+            let dotClass = "bg-slate-700";
+            let textClass = "text-slate-500";
+            let statusText = "Pending";
+            let statusClass = "text-slate-500";
+
+            if (isCompleted) {
+              dotClass = "bg-emerald-500 shadow shadow-emerald-500/50";
+              textClass = "text-slate-200 font-medium";
+              statusText = "Completed";
+              statusClass = "text-emerald-400";
+            } else if (isCurrent) {
+              dotClass = "bg-cyan-400 animate-pulse shadow shadow-cyan-400/50";
+              textClass = "text-cyan-300 font-medium";
+              statusText = "Running...";
+              statusClass = "text-cyan-400 animate-pulse";
+            }
+
+            return (
+              <div key={step.key} className="flex justify-between items-center py-1.5 border-b border-slate-800/40 last:border-0">
+                <div className="flex items-center gap-3">
+                  <span className={`w-2.5 h-2.5 rounded-full ${dotClass}`} />
+                  <span className={`text-sm ${textClass}`}>{step.label}</span>
+                </div>
+                <span className={`text-xs font-mono ${statusClass}`}>{statusText}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      
       {!ran && (
-        <p className="text-xs italic text-slate-600 mt-2">
-          Run Analyze to execute the pipeline.
-        </p>
+        <div className="mt-4 text-xs italic text-slate-500">
+          Ready to run multi-agent orchestration.
+        </div>
       )}
     </div>
   );
