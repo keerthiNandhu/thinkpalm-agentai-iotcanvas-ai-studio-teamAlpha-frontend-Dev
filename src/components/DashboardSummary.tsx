@@ -8,35 +8,42 @@ interface DashboardSummaryProps {
 
 export default function DashboardSummary({ analysis }: DashboardSummaryProps) {
   return (
-    <div style={styles.card}>
-      <h2 style={styles.heading}>Dashboard Summary</h2>
+    <div className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6 h-full">
+      <h2 className="text-2xl font-bold text-white">Dashboard Summary</h2>
 
       {!analysis ? (
-        <p style={styles.empty}>No dashboard generated yet.</p>
+        <p className="text-sm italic text-slate-500 mt-2">
+          No dashboard generated yet.
+        </p>
       ) : (
         <>
-          <div style={styles.typeRow}>
-            <span style={styles.label}>Dashboard Type</span>
-            <span style={styles.badge}>{analysis.dashboardType}</span>
+          {/* Dashboard type badge */}
+          <div className="flex items-center gap-3">
+            <span className="text-slate-400 text-sm">Type</span>
+            <span className="text-xs font-semibold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 px-3 py-0.5 rounded-full">
+              {analysis.dashboardType}
+            </span>
           </div>
 
-          <hr style={styles.divider} />
+          <hr className="border-slate-800" />
 
-          <h3 style={styles.subheading}>
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">
             Recommended Widgets ({analysis.widgets.length})
-          </h3>
+          </p>
 
           {analysis.widgets.length === 0 ? (
-            <p style={styles.empty}>
-              No widgets matched. Try mentioning temperature, battery, alert, or
-              device.
+            <p className="text-sm italic text-slate-500">
+              No widgets matched. Try mentioning temperature, battery, alert, or device.
             </p>
           ) : (
-            <ul style={styles.list}>
+            <ul className="flex flex-col gap-2">
               {analysis.widgets.map((widget, idx) => (
-                <li key={idx} style={styles.listItem}>
-                  <div style={styles.widgetName}>{widget.name}</div>
-                  <div style={styles.widgetReason}>{widget.reason}</div>
+                <li
+                  key={idx}
+                  className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 hover:border-cyan-500 transition"
+                >
+                  <p className="text-sm font-semibold text-white">{widget.name}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{widget.reason}</p>
                 </li>
               ))}
             </ul>
@@ -46,84 +53,3 @@ export default function DashboardSummary({ analysis }: DashboardSummaryProps) {
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  card: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "14px",
-    padding: "24px",
-    border: "1px solid #e2e8f0",
-    borderRadius: "8px",
-    background: "#ffffff",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-    height: "100%",
-  },
-  heading: {
-    margin: 0,
-    fontSize: "18px",
-    fontWeight: 600,
-    color: "#1a202c",
-  },
-  subheading: {
-    margin: 0,
-    fontSize: "14px",
-    fontWeight: 600,
-    color: "#4a5568",
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-  },
-  typeRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  label: {
-    fontSize: "13px",
-    color: "#718096",
-    fontWeight: 500,
-  },
-  badge: {
-    fontSize: "13px",
-    fontWeight: 600,
-    color: "#4f46e5",
-    background: "#eef2ff",
-    padding: "2px 10px",
-    borderRadius: "999px",
-  },
-  divider: {
-    border: "none",
-    borderTop: "1px solid #e2e8f0",
-    margin: "0",
-  },
-  empty: {
-    fontSize: "14px",
-    color: "#a0aec0",
-    fontStyle: "italic",
-    margin: 0,
-  },
-  list: {
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-  listItem: {
-    padding: "12px 14px",
-    border: "1px solid #e2e8f0",
-    borderRadius: "6px",
-    background: "#f7fafc",
-  },
-  widgetName: {
-    fontSize: "14px",
-    fontWeight: 600,
-    color: "#2d3748",
-    marginBottom: "4px",
-  },
-  widgetReason: {
-    fontSize: "13px",
-    color: "#718096",
-  },
-};

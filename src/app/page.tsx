@@ -5,6 +5,9 @@ import PRDInput from "../components/PRDInput";
 import DashboardSummary from "../components/DashboardSummary";
 import MemoryHistory from "../components/MemoryHistory";
 import ComponentTree from "../components/ComponentTree";
+import LivePreview from "../components/LivePreview";
+import AgentTimeline from "../components/AgentTimeline";
+import CodePreview from "../components/CodePreview";
 import { RequirementAnalysisAgent } from "../agents/RequirementAnalysisAgent";
 import { DashboardPlanningAgent } from "../agents/DashboardPlanningAgent";
 import { MemoryService, MemorySession } from "../memory/MemoryService";
@@ -16,10 +19,24 @@ const requirementAgent = new RequirementAnalysisAgent();
 const planningAgent = new DashboardPlanningAgent();
 const memory = new MemoryService();
 
+/** Build a TSX code string from the plan sections */
+function buildGeneratedCode(plan: DashboardPlan): string {
+  const sections = plan.sections
+    .map((s) => {
+      const widgets = s.widgets.map((w) => `  <${w} />`).join("\n");
+      return `<section id="${s.name.toLowerCase()}">\n${widgets}\n</section>`;
+    })
+    .join("\n\n");
+  return sections;
+}
+
 export default function Home() {
   const [analysis, setAnalysis] = useState<DashboardAnalysis | null>(null);
   const [plan, setPlan] = useState<DashboardPlan | null>(null);
   const [history, setHistory] = useState<MemorySession[]>([]);
+  const [selectedWidget, setSelectedWidget] = useState<string | null>(null);
+  const [generatedCode, setGeneratedCode] = useState<string>("");
+  const [pipelineRan, setPipelineRan] = useState(false);
 
   // Load persisted history on first render (client only)
   useEffect(() => {
@@ -27,59 +44,94 @@ export default function Home() {
   }, []);
 
   const handleAnalyze = (prd: string) => {
-    // 1. Requirement analysis
+    // 1. Run RequirementAnalysisAgent
     const result = requirementAgent.analyze(prd);
 
-    // 2. Widget recommendation
+    // 2. Extract widget names → Run WidgetRecommendationTool
     const widgetNames = result.widgets.map((w) => w.name);
     recommendWidgets(widgetNames);
 
-    // 3. Dashboard planning
+    // 3. Run DashboardPlanningAgent
     const dashboardPlan = planningAgent.planDashboard(widgetNames);
 
-    // 4. Tailwind layout (merged into plan, also available standalone)
+    // 4. Generate Tailwind classes via TailwindLayoutTool
     const tailwindClass = generateLayout(widgetNames.length);
-    dashboardPlan.tailwind = tailwindClass;
 
-    // 5. Persist to memory
-    memory.saveSession(prd, result);
+    // 5. Attach { sections, tailwind } to plan
+    const finalPlan = {
+      sections: dashboardPlan.sections,
+      tailwind: tailwindClass,
+    };
 
-    // 6. Update state
+    // 6. setAnalysis → setPlan → save memory
     setAnalysis(result);
-    setPlan(dashboardPlan);
+    setPlan(finalPlan);
+    memory.saveSession(prd, result);
     setHistory(memory.getHistory());
+
+    // Phase 6: generated code + timeline
+    setGeneratedCode(buildGeneratedCode(finalPlan));
+    setPipelineRan(true);
+    setSelectedWidget(null);
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 p-8 font-sans">
-      {/* Top: Title */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">
-          IoTCanvas AI Studio
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Describe your IoT requirements and let AI plan your dashboard.
-        </p>
-      </div>
+    <main className="min-h-screen bg-slate-950 text-white font-sans p-8">
+      <div className="max-w-7xl mx-auto flex flex-col gap-6">
 
-      {/* Middle: PRD left / Summary right */}
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <div>
+        {/* ── HEADER ── */}
+        <header className="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-cyan-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 001.5 2.121m-1.5-2.121c.251.023.501.05.75.082M12 12.75l-4.5 4.5m0 0L5 19m2.5-1.75H5m9.75 0l4.5 4.5M19 17.25h-2.5m0 0l2.5-2.5" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-white">
+                IoTCanvas <span className="text-cyan-400">AI Studio</span>
+              </h1>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Describe your IoT requirements and let AI plan your dashboard.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${pipelineRan ? "bg-emerald-400 shadow shadow-emerald-400/50" : "bg-slate-600"}`} />
+            <span className="text-xs text-slate-400">
+              {pipelineRan ? "Pipeline Complete" : "AI Pipeline Ready"}
+            </span>
+          </div>
+        </header>
+
+        {/* ── ROW 1: PRD | SUMMARY ── */}
+        <div className="grid xl:grid-cols-2 grid-cols-1 gap-6">
           <PRDInput onAnalyze={handleAnalyze} />
-        </div>
-        <div>
           <DashboardSummary analysis={analysis} />
         </div>
-      </div>
 
-      {/* Bottom: Memory left / Component Tree right */}
-      <div className="grid grid-cols-2 gap-6">
-        <div>
+        {/* ── ROW 2: MEMORY | AGENT TIMELINE ── */}
+        <div className="grid xl:grid-cols-2 grid-cols-1 gap-6">
           <MemoryHistory sessions={history} />
+          <AgentTimeline ran={pipelineRan} />
         </div>
-        <div>
-          <ComponentTree plan={plan} />
+
+        {/* ── ROW 3: COMPONENT TREE | LIVE PREVIEW ── */}
+        <div className="grid xl:grid-cols-2 grid-cols-1 gap-6">
+          <ComponentTree
+            plan={plan}
+            selectedWidget={selectedWidget}
+            onSelectWidget={setSelectedWidget}
+          />
+          <LivePreview
+            widgets={analysis?.widgets.map((w) => w.name) ?? []}
+            selectedWidget={selectedWidget}
+          />
         </div>
+
+        {/* ── ROW 4: CODE PREVIEW (full width) ── */}
+        <CodePreview generatedCode={generatedCode} />
+
       </div>
     </main>
   );
