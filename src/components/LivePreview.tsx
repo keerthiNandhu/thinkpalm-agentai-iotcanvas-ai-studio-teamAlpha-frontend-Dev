@@ -23,6 +23,13 @@ const WIDGET_MAP: Record<WidgetKey, React.ReactNode> = {
 
 type TabType = "Overview" | "Devices" | "Alerts" | "Settings";
 
+const COL_SPAN_MAP: Record<number, string> = {
+  1: "col-span-1",
+  2: "col-span-2",
+  3: "col-span-3",
+  4: "col-span-4",
+};
+
 export default function LivePreview({ plan, selectedWidget }: LivePreviewProps) {
   const refs = useRef<Record<string, HTMLDivElement | null>>({});
   const [activeTab, setActiveTab] = useState<TabType>("Overview");
@@ -153,7 +160,9 @@ export default function LivePreview({ plan, selectedWidget }: LivePreviewProps) 
             {plan.sections.map((section) => (
               <div 
                 key={section.name} 
-                className="bg-slate-900/40 border border-slate-800/80 rounded-xl p-3 flex flex-col gap-3 shadow-inner"
+                className={`bg-slate-900/40 border border-slate-800/80 rounded-xl p-3 flex flex-col gap-3 shadow-inner ${
+                  COL_SPAN_MAP[section.widgets.length] || "col-span-1"
+                }`}
               >
                 <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500 border-b border-slate-800/40 pb-1 flex justify-between items-center">
                   <span>{section.name} Panel</span>
