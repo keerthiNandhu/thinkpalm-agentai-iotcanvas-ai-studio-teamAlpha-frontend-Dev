@@ -85,6 +85,29 @@ export default function Home() {
     }, 0);
   };
 
+  const handleUpdatePlan = (newPlan: DashboardPlan) => {
+    const flatWidgetNames = newPlan.sections.flatMap((s) => s.widgets);
+    const tailwindClass = generateLayout(flatWidgetNames.length);
+    newPlan.tailwind = tailwindClass;
+
+    const newWidgetsAnalysis = flatWidgetNames.map((name) => {
+      const existing = analysis?.widgets.find((w) => w.name === name);
+      return {
+        name,
+        reason: existing?.reason ?? "Manually placed in custom layout",
+      };
+    });
+
+    const updatedAnalysis = {
+      dashboardType: analysis?.dashboardType ?? "IoT Monitoring Dashboard",
+      widgets: newWidgetsAnalysis,
+    };
+
+    setAnalysis(updatedAnalysis);
+    setPlan(newPlan);
+    setGeneratedCode(buildGeneratedCode(newPlan));
+  };
+
   return (
     <main className="min-h-screen bg-slate-950 text-white font-sans p-8">
       <div className="max-w-7xl mx-auto flex flex-col gap-6">
@@ -140,9 +163,10 @@ export default function Home() {
             plan={plan}
             selectedWidget={selectedWidget}
             onSelectWidget={setSelectedWidget}
+            onUpdatePlan={handleUpdatePlan}
           />
           <LivePreview
-            widgets={analysis?.widgets.map((w) => w.name) ?? []}
+            plan={plan}
             selectedWidget={selectedWidget}
           />
         </div>
