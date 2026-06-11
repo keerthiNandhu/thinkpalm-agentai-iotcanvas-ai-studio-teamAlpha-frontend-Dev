@@ -4,6 +4,7 @@ import { MemorySession } from "../memory/MemoryService";
 
 interface MemoryHistoryProps {
   sessions: MemorySession[];
+  onSelectSession: (prd: string) => void;
 }
 
 function formatDate(iso: string): string {
@@ -15,7 +16,7 @@ function formatDate(iso: string): string {
   });
 }
 
-export default function MemoryHistory({ sessions }: MemoryHistoryProps) {
+export default function MemoryHistory({ sessions, onSelectSession }: MemoryHistoryProps) {
   return (
     <div className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6 h-full">
       <h2 className="text-2xl font-bold text-white">Recent Sessions</h2>
@@ -27,7 +28,14 @@ export default function MemoryHistory({ sessions }: MemoryHistoryProps) {
           {sessions.map((s) => (
             <li
               key={s.id}
-              className="flex items-start justify-between rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 gap-3"
+              onClick={() => {
+                onSelectSession(s.prd);
+                const element = document.getElementById("prd-section");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+              }}
+              className="flex items-start justify-between rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 gap-3 cursor-pointer hover:border-cyan-500 hover:bg-slate-800 transition-all"
             >
               <div className="flex flex-col gap-1 min-w-0">
                 <p className="truncate text-sm font-medium text-white">

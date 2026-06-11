@@ -12,35 +12,44 @@ export default function CodePreview({ generatedCode }: CodePreviewProps) {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(generatedCode);
+      await navigator.clipboard.writeText(generatedCode || PLACEHOLDER);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // fallback: do nothing silently
+      // fallback
     }
   };
 
   const handleExport = () => {
     exportTool();
-    const blob = new Blob([generatedCode], { type: "text/plain" });
+    const code = generatedCode || PLACEHOLDER;
+    const blob = new Blob([code], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "dashboard.tsx";
+    a.download = "generated-dashboard.tsx";
     a.click();
     URL.revokeObjectURL(url);
   };
 
+  const codeToShow = generatedCode || PLACEHOLDER;
+
   return (
-    <div className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white">Generated Code</h2>
+    <div className="bg-black border border-slate-800 rounded-xl p-6 font-mono text-cyan-300 shadow-xl flex flex-col gap-4">
+      {/* Header bar of Terminal */}
+      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-red-500/80" />
+          <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
+          <span className="w-3 h-3 rounded-full bg-green-500/80" />
+          <span className="ml-2 text-xs text-slate-400">generated-dashboard.tsx</span>
+        </div>
         <div className="flex gap-2">
           <button
             onClick={handleCopy}
-            className="px-4 py-1.5 rounded-lg text-xs font-semibold border border-slate-700 bg-slate-800 text-slate-300 hover:border-cyan-500 hover:text-cyan-300 transition"
+            className="px-4 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900 text-slate-300 hover:border-cyan-500 hover:text-cyan-300 transition"
           >
-            {copied ? "Copied ✓" : "Copy"}
+            {copied ? "✓ Copied" : "Copy"}
           </button>
           <button
             onClick={handleExport}
@@ -51,22 +60,16 @@ export default function CodePreview({ generatedCode }: CodePreviewProps) {
         </div>
       </div>
 
-      <div className="rounded-lg bg-black border border-slate-700 overflow-auto max-h-64">
-        <div className="flex items-center gap-1.5 px-4 py-2 border-b border-slate-800 bg-slate-900/60">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-          <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
-          <span className="ml-2 text-xs text-slate-500 font-mono">dashboard.tsx</span>
-        </div>
-        <pre className="font-mono text-sm text-cyan-300 p-4 leading-relaxed whitespace-pre overflow-x-auto">
-          <code>{generatedCode || PLACEHOLDER}</code>
-        </pre>
-      </div>
+      <pre className="overflow-auto max-h-[350px] leading-relaxed text-sm whitespace-pre">
+        <code>{codeToShow}</code>
+      </pre>
     </div>
   );
 }
 
 const PLACEHOLDER = `// Run Analyze to generate your dashboard code
+
+<div className="grid gap-6 grid-cols-3">
 
 <section id="top">
   <DeviceCard />
@@ -79,4 +82,6 @@ const PLACEHOLDER = `// Run Analyze to generate your dashboard code
 
 <section id="alerts">
   <AlertPanel />
-</section>`;
+</section>
+
+</div>`;

@@ -6,19 +6,57 @@ interface DashboardSummaryProps {
   analysis: DashboardAnalysis | null;
 }
 
+function getLayoutName(count: number): string {
+  if (count === 0) return "None";
+  if (count === 1) return "1 Column";
+  if (count <= 3) return "2 Columns";
+  if (count <= 6) return "3 Columns";
+  return "4 Columns";
+}
+
 export default function DashboardSummary({ analysis }: DashboardSummaryProps) {
   return (
-    <div className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6 h-full">
-      <h2 className="text-2xl font-bold text-white">Dashboard Summary</h2>
+    <div className="flex flex-col gap-4 bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-xl shadow-lg p-6 h-full transition-all duration-300 hover:shadow-cyan-500/5">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">Dashboard Summary</h2>
+        {analysis && (
+          <span className="text-xs font-semibold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 px-3 py-0.5 rounded-full">
+            Active
+          </span>
+        )}
+      </div>
 
       {!analysis ? (
-        <p className="text-sm italic text-slate-500 mt-2">
-          No dashboard generated yet.
-        </p>
+        <div className="flex-1 flex items-center justify-center border border-dashed border-slate-800/80 rounded-lg p-8 min-h-[200px]">
+          <p className="text-sm italic text-slate-500 text-center">
+            No dashboard generated
+          </p>
+        </div>
       ) : (
         <>
-          {/* Dashboard type badge */}
-          <div className="flex items-center gap-3">
+          {/* Stats Row */}
+          <div className="grid grid-cols-4 gap-2 text-center bg-slate-950/40 rounded-lg p-3 border border-slate-800/80">
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Widgets</p>
+              <p className="text-base font-extrabold text-cyan-400 mt-0.5">{analysis.widgets.length}</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Layout</p>
+              <p className="text-xs font-semibold text-slate-300 mt-1 truncate">
+                {getLayoutName(analysis.widgets.length)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Memory</p>
+              <p className="text-xs font-semibold text-slate-300 mt-1">Enabled</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Tools</p>
+              <p className="text-xs font-semibold text-slate-300 mt-1">2 Invoked</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 mt-1">
             <span className="text-slate-400 text-sm">Type</span>
             <span className="text-xs font-semibold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 px-3 py-0.5 rounded-full">
               {analysis.dashboardType}
@@ -27,12 +65,12 @@ export default function DashboardSummary({ analysis }: DashboardSummaryProps) {
 
           <hr className="border-slate-800" />
 
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mt-1">
             Recommended Widgets ({analysis.widgets.length})
           </p>
 
           {analysis.widgets.length === 0 ? (
-            <p className="text-sm italic text-slate-500">
+            <p className="text-sm italic text-slate-500 py-2">
               No widgets matched. Try mentioning temperature, battery, alert, or device.
             </p>
           ) : (
@@ -40,14 +78,31 @@ export default function DashboardSummary({ analysis }: DashboardSummaryProps) {
               {analysis.widgets.map((widget, idx) => (
                 <li
                   key={idx}
-                  className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 hover:border-cyan-500 transition"
+                  className="rounded-lg border border-slate-800 bg-slate-950/40 hover:bg-slate-950/80 hover:border-cyan-500/80 hover:-translate-y-0.5 px-4 py-3 transition-all duration-300 shadow-sm cursor-default"
                 >
-                  <p className="text-sm font-semibold text-white">{widget.name}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{widget.reason}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-cyan-400 font-bold">✓</span>
+                    <p className="text-sm font-semibold text-white">{widget.name}</p>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-1 pl-5">{widget.reason}</p>
                 </li>
               ))}
             </ul>
           )}
+
+          {/* Footer */}
+          <footer className="mt-auto border-t border-slate-800/60 pt-4 flex flex-col gap-1.5 text-[11px] text-slate-500">
+            <span>Generated by:</span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-slate-400 font-mono">
+                Requirement Agent
+              </span>
+              <span>+</span>
+              <span className="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-slate-400 font-mono">
+                Widget Recommendation Tool
+              </span>
+            </div>
+          </footer>
         </>
       )}
     </div>
