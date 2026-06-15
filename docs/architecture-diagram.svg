@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b132b"/>
+      <stop offset="100%" stop-color="#1c2541"/>
+    </linearGradient>
+    
+    <!-- Box Gradient -->
+    <linearGradient id="boxGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f2d5a"/>
+      <stop offset="100%" stop-color="#131d3e"/>
+    </linearGradient>
+
+    <!-- Agent Gradient -->
+    <linearGradient id="agentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#4facfe"/>
+    </linearGradient>
+
+    <!-- Tool Gradient -->
+    <linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f857a6"/>
+      <stop offset="100%" stop-color="#ff5858"/>
+    </linearGradient>
+
+    <!-- Shadow Filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="650" fill="url(#bgGrad)"/>
+
+  <!-- Title -->
+  <text x="500" y="45" font-family="'Segoe UI', Helvetica, sans-serif" font-size="28" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">
+    IoTCanvas AI Studio — Architecture Pipeline
+  </text>
+  <text x="500" y="70" font-family="'Segoe UI', Helvetica, sans-serif" font-size="14" fill="#64ffda" text-anchor="middle" opacity="0.8">
+    Multi-Agent Telemetry Plan & Code Exporter Flow
+  </text>
+
+  <!-- ================= INPUT SECTION ================= -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="120" width="180" height="80" rx="10" fill="#2d3748" stroke="#4a5568" stroke-width="2"/>
+    <text x="140" y="155" font-family="'Segoe UI', sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">PRD Input Spec</text>
+    <text x="140" y="175" font-family="'Segoe UI', sans-serif" font-size="11" fill="#cbd5e0" text-anchor="middle">Markdown / Text specifications</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <path d="M 230 160 L 290 160" stroke="#00f2fe" stroke-width="3" fill="none"/>
+  <polygon points="290,160 280,154 280,166" fill="#00f2fe"/>
+
+  <!-- ================= AGENTS PIPELINE ================= -->
+  <!-- Agent 1: Requirement Agent -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="120" width="220" height="80" rx="10" fill="url(#agentGrad)"/>
+    <text x="410" y="150" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="extrabold" fill="#0b132b" text-anchor="middle">RequirementAnalysisAgent</text>
+    <text x="410" y="170" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="bold" fill="#0b132b" text-anchor="middle">1. Keyword & Widget Mapping</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <path d="M 410 200 L 410 250" stroke="#00f2fe" stroke-width="3" fill="none"/>
+  <polygon points="410,250 404,240 416,240" fill="#00f2fe"/>
+
+  <!-- Memory Box (connected side-car) -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="240" width="180" height="70" rx="8" fill="#1a202c" stroke="#64ffda" stroke-width="2"/>
+    <text x="140" y="272" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="bold" fill="#64ffda" text-anchor="middle">MemoryService</text>
+    <text x="140" y="290" font-family="'Segoe UI', sans-serif" font-size="10" fill="#90a4ae" text-anchor="middle">localStorage session history</text>
+  </g>
+  <path d="M 230 275 L 300 275" stroke="#64ffda" stroke-dasharray="5,5" stroke-width="2" fill="none"/>
+  <polygon points="300,275 292,271 292,279" fill="#64ffda"/>
+
+  <!-- Agent 2: Planning Agent -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="260" width="220" height="80" rx="10" fill="url(#agentGrad)"/>
+    <text x="410" y="290" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="extrabold" fill="#0b132b" text-anchor="middle">DashboardPlanningAgent</text>
+    <text x="410" y="310" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="bold" fill="#0b132b" text-anchor="middle">2. Panel Distribution (Top, Main, Right)</text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <path d="M 410 340 L 410 390" stroke="#00f2fe" stroke-width="3" fill="none"/>
+  <polygon points="410,390 404,380 416,380" fill="#00f2fe"/>
+
+  <!-- Agent 3: Gen Agent -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="400" width="220" height="80" rx="10" fill="url(#agentGrad)"/>
+    <text x="410" y="430" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="extrabold" fill="#0b132b" text-anchor="middle">ComponentGenerationAgent</text>
+    <text x="410" y="450" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="bold" fill="#0b132b" text-anchor="middle">3. Standard Code Formatting</text>
+  </g>
+
+  <!-- Arrow 4 -->
+  <path d="M 520 440 L 610 440" stroke="#00f2fe" stroke-width="3" fill="none"/>
+  <polygon points="610,440 600,434 600,446" fill="#00f2fe"/>
+
+  <!-- ================= TOOLS & EXPORTS ================= -->
+  <!-- Tool 1: Widget Rec Tool -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="125" width="220" height="70" rx="8" fill="url(#toolGrad)"/>
+    <text x="730" y="155" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">WidgetRecommendationTool</text>
+    <text x="730" y="173" font-family="'Segoe UI', sans-serif" font-size="10" fill="#ffebee" text-anchor="middle">Sets Priority (High/Medium)</text>
+  </g>
+  <path d="M 520 160 L 620 160" stroke="#ff5858" stroke-width="2" fill="none"/>
+  <polygon points="520,160 528,156 528,164" fill="#ff5858"/>
+
+  <!-- Tool 2: Layout Tool -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="265" width="220" height="70" rx="8" fill="url(#toolGrad)"/>
+    <text x="730" y="295" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">TailwindLayoutTool</text>
+    <text x="730" y="313" font-family="'Segoe UI', sans-serif" font-size="10" fill="#ffebee" text-anchor="middle">Calculates dynamic columns grid</text>
+  </g>
+  <path d="M 520 300 L 620 300" stroke="#ff5858" stroke-width="2" fill="none"/>
+  <polygon points="520,300 528,296 528,304" fill="#ff5858"/>
+
+  <!-- Output 1: Live Preview -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="405" width="220" height="70" rx="8" fill="#111827" stroke="#00f2fe" stroke-width="2"/>
+    <text x="730" y="435" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="bold" fill="#00f2fe" text-anchor="middle">Live Preview Simulator</text>
+    <text x="730" y="453" font-family="'Segoe UI', sans-serif" font-size="10" fill="#9ca3af" text-anchor="middle">Interactive widget website view</text>
+  </g>
+  
+  <!-- Arrow to StackBlitz -->
+  <path d="M 730 475 L 730 520" stroke="#64ffda" stroke-width="2.5" fill="none"/>
+  <polygon points="730,520 725,512 735,512" fill="#64ffda"/>
+
+  <!-- Exporter: StackBlitz SDK -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="530" width="220" height="70" rx="8" fill="#4c1d95" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="730" y="560" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="bold" fill="#f3e8ff" text-anchor="middle">StackBlitz Exporter</text>
+    <text x="730" y="578" font-family="'Segoe UI', sans-serif" font-size="10" fill="#ddd6fe" text-anchor="middle">Instant cloud IDE sandbox</text>
+  </g>
+
+  <!-- ================= RE-FLOW / FEEDBACK ================= -->
+  <!-- Feedback Arrow from ComponentTree back to Planning -->
+  <path d="M 300 440 L 260 440 L 260 300 L 300 300" stroke="#64ffda" stroke-width="2.5" fill="none" stroke-dasharray="6,4"/>
+  <polygon points="300,300 292,296 292,304" fill="#64ffda"/>
+  <text x="250" y="375" font-family="'Segoe UI', sans-serif" font-size="10" fill="#64ffda" text-anchor="middle" transform="rotate(-90 250 375)">Component Tree Re-Flow</text>
+
+  <!-- Footer Info -->
+  <rect x="0" y="620" width="1000" height="30" fill="#020817"/>
+  <text x="500" y="640" font-family="'Segoe UI', sans-serif" font-size="11" fill="#475569" text-anchor="middle">
+    Designed by Keerthi C &amp; Kavya Sebastian — ThinkPalm Technologies
+  </text>
+</svg>
