@@ -160,7 +160,6 @@ export default function Home() {
         <div className="grid xl:grid-cols-2 grid-cols-1 gap-6">
           <MemoryHistory
             sessions={history.slice(0, 5)}
-            totalStored={history.length}
             onSelectSession={handleSelectSession}
             onDeleteSession={handleDeleteSession}
           />
