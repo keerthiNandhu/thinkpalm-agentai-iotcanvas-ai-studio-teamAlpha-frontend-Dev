@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="100%" height="100%">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="1000" height="650">
   <defs>
     <!-- Background Gradient -->
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -25,8 +26,15 @@
     </linearGradient>
 
     <!-- Shadow Filter -->
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feOffset in="SourceAlpha" dx="0" dy="8" result="offset"/>
+      <feGaussianBlur in="offset" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.5" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
   </defs>
 
@@ -38,7 +46,7 @@
     IoTCanvas AI Studio — Architecture Pipeline
   </text>
   <text x="500" y="70" font-family="'Segoe UI', Helvetica, sans-serif" font-size="14" fill="#64ffda" text-anchor="middle" opacity="0.8">
-    Multi-Agent Telemetry Plan & Code Exporter Flow
+    Multi-Agent Telemetry Plan &amp; Code Exporter Flow
   </text>
 
   <!-- ================= INPUT SECTION ================= -->
@@ -56,8 +64,8 @@
   <!-- Agent 1: Requirement Agent -->
   <g filter="url(#shadow)">
     <rect x="300" y="120" width="220" height="80" rx="10" fill="url(#agentGrad)"/>
-    <text x="410" y="150" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="extrabold" fill="#0b132b" text-anchor="middle">RequirementAnalysisAgent</text>
-    <text x="410" y="170" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="bold" fill="#0b132b" text-anchor="middle">1. Keyword & Widget Mapping</text>
+    <text x="410" y="150" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="800" fill="#0b132b" text-anchor="middle">RequirementAnalysisAgent</text>
+    <text x="410" y="170" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="bold" fill="#0b132b" text-anchor="middle">1. Keyword &amp; Widget Mapping</text>
   </g>
 
   <!-- Arrow 2 -->
@@ -76,7 +84,7 @@
   <!-- Agent 2: Planning Agent -->
   <g filter="url(#shadow)">
     <rect x="300" y="260" width="220" height="80" rx="10" fill="url(#agentGrad)"/>
-    <text x="410" y="290" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="extrabold" fill="#0b132b" text-anchor="middle">DashboardPlanningAgent</text>
+    <text x="410" y="290" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="800" fill="#0b132b" text-anchor="middle">DashboardPlanningAgent</text>
     <text x="410" y="310" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="bold" fill="#0b132b" text-anchor="middle">2. Panel Distribution (Top, Main, Right)</text>
   </g>
 
@@ -87,7 +95,7 @@
   <!-- Agent 3: Gen Agent -->
   <g filter="url(#shadow)">
     <rect x="300" y="400" width="220" height="80" rx="10" fill="url(#agentGrad)"/>
-    <text x="410" y="430" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="extrabold" fill="#0b132b" text-anchor="middle">ComponentGenerationAgent</text>
+    <text x="410" y="430" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="800" fill="#0b132b" text-anchor="middle">ComponentGenerationAgent</text>
     <text x="410" y="450" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="bold" fill="#0b132b" text-anchor="middle">3. Standard Code Formatting</text>
   </g>
 
@@ -95,7 +103,7 @@
   <path d="M 520 440 L 610 440" stroke="#00f2fe" stroke-width="3" fill="none"/>
   <polygon points="610,440 600,434 600,446" fill="#00f2fe"/>
 
-  <!-- ================= TOOLS & EXPORTS ================= -->
+  <!-- ================= TOOLS AND EXPORTS ================= -->
   <!-- Tool 1: Widget Rec Tool -->
   <g filter="url(#shadow)">
     <rect x="620" y="125" width="220" height="70" rx="8" fill="url(#toolGrad)"/>

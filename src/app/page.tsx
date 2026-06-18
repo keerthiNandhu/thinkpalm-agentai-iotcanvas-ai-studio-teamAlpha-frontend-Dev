@@ -85,6 +85,11 @@ export default function Home() {
     }, 0);
   };
 
+  const handleDeleteSession = (id: string) => {
+    memory.deleteSession(id);
+    setHistory(memory.getHistory());
+  };
+
   const handleUpdatePlan = (newPlan: DashboardPlan) => {
     const flatWidgetNames = newPlan.sections.flatMap((s) => s.widgets);
     const tailwindClass = generateLayout(flatWidgetNames.length);
@@ -153,7 +158,12 @@ export default function Home() {
 
         {/* ── ROW 2: MEMORY | AGENT TIMELINE ── */}
         <div className="grid xl:grid-cols-2 grid-cols-1 gap-6">
-          <MemoryHistory sessions={history} onSelectSession={handleSelectSession} />
+          <MemoryHistory
+            sessions={history.slice(0, 5)}
+            totalStored={history.length}
+            onSelectSession={handleSelectSession}
+            onDeleteSession={handleDeleteSession}
+          />
           <AgentTimeline ran={pipelineRan} key={runKey} />
         </div>
 
