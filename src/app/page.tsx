@@ -90,6 +90,16 @@ export default function Home() {
     setHistory(memory.getHistory());
   };
 
+  const handleClear = () => {
+    setAnalysis(null);
+    setPlan(null);
+    setSelectedWidget(null);
+    setGeneratedCode("");
+    setPipelineRan(false);
+    setRunKey((prev) => prev + 1);
+    setSelectedPRD("");
+  };
+
   const handleUpdatePlan = (newPlan: DashboardPlan) => {
     const flatWidgetNames = newPlan.sections.flatMap((s) => s.widgets);
     const tailwindClass = generateLayout(flatWidgetNames.length);
@@ -152,7 +162,12 @@ export default function Home() {
 
         {/* ── ROW 1: PRD | SUMMARY ── */}
         <div className="grid xl:grid-cols-2 grid-cols-1 gap-6">
-          <PRDInput onAnalyze={handleAnalyze} value={selectedPRD} />
+          <PRDInput
+            onAnalyze={handleAnalyze}
+            onClear={handleClear}
+            value={selectedPRD}
+            hasActiveSession={pipelineRan}
+          />
           <DashboardSummary analysis={analysis} />
         </div>
 
