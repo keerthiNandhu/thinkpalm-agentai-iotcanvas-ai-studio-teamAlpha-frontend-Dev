@@ -235,7 +235,7 @@ Below are screenshots representing the key modules inside the workspace:
 
 ## Demo Video
 
-[![Demo Video](https://img.shields.io/badge/Demo_Video-Loom-red?style=for-the-badge&logo=youtube)](https://www.loom.com/share/your-video-id-here)
+[![Demo Video](https://www.loom.com/share/dad5ce7cb8234687b93842c443c779b7)
 
 *Click the badge above to watch the 5-minute Loom video walking through the interactive features.*
 
