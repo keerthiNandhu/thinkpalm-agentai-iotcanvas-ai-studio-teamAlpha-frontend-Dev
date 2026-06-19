@@ -4,10 +4,17 @@ import { useState, useEffect } from "react";
 
 interface PRDInputProps {
   onAnalyze: (prd: string) => void;
+  onClear: () => void;
   value?: string;
+  hasActiveSession?: boolean;
 }
 
-export default function PRDInput({ onAnalyze, value = "" }: PRDInputProps) {
+export default function PRDInput({
+  onAnalyze,
+  onClear,
+  value = "",
+  hasActiveSession = false,
+}: PRDInputProps) {
   const [prd, setPrd] = useState(value);
   const [showLoadedLabel, setShowLoadedLabel] = useState(false);
 
@@ -26,6 +33,14 @@ export default function PRDInput({ onAnalyze, value = "" }: PRDInputProps) {
     }
   };
 
+  const handleClear = () => {
+    setPrd("");
+    setShowLoadedLabel(false);
+    onClear();
+  };
+
+  const canClear = Boolean(prd.trim()) || hasActiveSession;
+
   return (
     <div id="prd-section" className="flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-6 h-full transition-all duration-300">
       <div className="flex items-center justify-between">
@@ -36,6 +51,15 @@ export default function PRDInput({ onAnalyze, value = "" }: PRDInputProps) {
               Loaded from history
             </span>
           )}
+          <button
+            type="button"
+            onClick={handleClear}
+            disabled={!canClear}
+            className="text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed border border-slate-700 hover:border-slate-500 disabled:hover:border-slate-700 bg-slate-800/80 hover:bg-slate-800 px-3 py-1 rounded-md transition"
+            title="Clear requirements and reset the studio"
+          >
+            Clear
+          </button>
           <span className="text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded-md">PRD</span>
         </div>
       </div>

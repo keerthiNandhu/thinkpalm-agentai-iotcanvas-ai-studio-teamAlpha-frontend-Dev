@@ -112,7 +112,7 @@ Below is the directory layout of the application showing the required submission
 ```text
 ├── src/                  # All source code
 │   ├── app/              # Next.js App Router (layout, page, styles)
-│   ├── components/       # Core studio panels (PRDInput, Timeline, tree, etc.)
+│   ├── components/       # Core studio panels (PRDInput, DashboardSummary, Timeline, tree, etc.)
 │   ├── agents/           # AI pipeline agent classes
 │   ├── memory/           # LocalStorage session serializer
 │   ├── tools/            # Layout grid & widgets helpers
@@ -211,17 +211,19 @@ The generated TSX file exports:
 
 Below are screenshots representing the key modules inside the workspace:
 
-* **Main Workspace**: ![Main Workspace](docs/screenshots/01-main-ui.png)
-* **Agent Executions**: ![Agent Executions](docs/screenshots/02-agent-timeline.png)
-* **Component Tree Editor**: ![Component Tree Editor](docs/screenshots/03-component-tree.png)
-* **Live Telemetry Preview**: ![Live Telemetry Preview](docs/screenshots/04-live-preview.png)
-* **TSX Code Preview**: ![TSX Code Preview](docs/screenshots/05-code-preview.png)
+* **Main Workspace** (PRD input + Dashboard Summary): ![Main Workspace](docs/screenshots/01-main-ui.png)
+* **Recent Sessions**: ![Recent Sessions](docs/screenshots/02-recent-sessions.png)
+* **Agent Executions**: ![Agent Executions](docs/screenshots/03-agent-timeline.png)
+* **Component Tree Editor**: ![Component Tree Editor](docs/screenshots/04-component-tree.png)
+* **Live Telemetry Preview**: ![Live Telemetry Preview](docs/screenshots/05-live-preview.png)
+* **TSX Code Preview**: ![TSX Code Preview](docs/screenshots/06-code-preview.png)
 
 ---
 
 ## Testing Checklist
 
 - [x] Inputting PRD parses and triggers the full agent pipeline
+- [x] Dashboard Summary shows dashboard type, layout columns, widget count, and recommended widgets with reasons
 - [x] Timeline steps animate sequentially with correct status states
 - [x] Component tree permits appending widgets via `+ Add` dropdown
 - [x] Delete triggers on tree node updates previews and code templates
